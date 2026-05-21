@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Управление пользователями</h2><hr>
+<div class="row mb-4">
+    <div class="col-md-12">
+        <form method="GET" class="row g-3 align-items-end">
+            <div class="col-auto">
+                <label class="form-label">Фильтр по статусу:</label>
+                <select name="status" class="form-select">
+                    <option value="">Все</option>
+                    <option value="Активен" {% if current_status == 'Активен' %}selected{% endif %}>Активен</option>
+                    <option value="Заблокирован" {% if current_status == 'Заблокирован' %}selected{% endif %}>Заблокирован</option>
+                </select>
+            </div>
+            <div class="col-auto">
+                <label class="form-label">Сортировка:</label>
+                <select name="sort" class="form-select">
+                    <option value="username" {% if current_sort == 'username' %}selected{% endif %}>По алфавиту (А-Я)</option>
+                    <option value="status" {% if current_sort == 'status' %}selected{% endif %}>По статусу</option>
+                </select>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">Применить</button>
+                <a href="{{ url_for('admin_users') }}" class="btn btn-secondary">Сбросить</a>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="table table-hover bg-white rounded shadow-sm">
+        <thead><tr><th>ID</th><th>Логин</th><th>Роль</th><th>Статус</th><th>Действия</th></tr></thead>
+        <tbody>
+            {% for u in users %}
+            <tr>
+                <td>{{ u.id }}</td><td>{{ u.username }}</td>
+                <td>{% if u.is_admin %}👑 Админ{% else %}👤 Пользователь{% endif %}</td>
+                <td><span class="badge {% if u.status == 'Активен' %}bg-success{% else %}bg-danger{% endif %}">{{ u.status }}</span></td>
+                <td>
+                    {% if u.id != current_user.id %}
+                    <form method="POST" action="{{ url_for('update_user', user_id=u.id) }}" class="d-flex gap-2 align-items-center">
+                        <div class="d-flex flex-column gap-1" style="min-width: 150px;">
+                            <select name="status" class="form-select form-select-sm">
+                                <option value="Активен" {% if u.status == 'Активен' %}selected{% endif %}>✅ Активен</option>
+                                <option value="Заблокирован" {% if u.status == 'Заблокирован' %}selected{% endif %}>🚫 Заблок.</option>
+                            </select>
+                            <select name="role" class="form-select form-select-sm">
+                                <option value="user" {% if not u.is_admin %}selected{% endif %}>👤 Пользователь</option>
+                                <option value="admin" {% if u.is_admin %}selected{% endif %}>👑 Администратор</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-primary">💾</button>
+                    </form>
+                    {% else %}
+                    <span class="text-muted small">Это ваш аккаунт</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

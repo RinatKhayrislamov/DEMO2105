@@ -1,0 +1,30 @@
+Если чёто не получается удалите папку "instance" и перезапустите проект
+
+Windows
+--------------------
+python -m venv venv
+venv\Scripts\activate
+
+Linux
+------------------------------
+python3 -m venv venv
+source venv/bin/activate
+
+
+pip install -r requirements.txt
+
+
+python app.py
+
+Если чёто не получается удалите папку "instance" и перезапустите проект
+
+Админ:
+л: Admin26
+п: Demo20
+
+Пользователь1:
+л:test123
+п:test123123
+
+
+и всё работает!!!!!

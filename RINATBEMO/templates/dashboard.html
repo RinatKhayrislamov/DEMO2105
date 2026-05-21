@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Личный кабинет</h2><hr>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card p-3 mb-4">
+            <h4>Новая заявка</h4>
+            <form method="POST" action="{{ url_for('new_request') }}">{{ form.hidden_tag() }}
+                <div class="mb-2">{{ form.title(class="form-control", placeholder="Тема") }}</div>
+                <div class="mb-2">{{ form.description(class="form-control", rows=4, placeholder="Описание") }}</div>
+                {{ form.submit(class="btn btn-success w-100") }}
+            </form>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <h4>Мои заявки</h4>
+        {% if requests %}
+        <div class="list-group">
+            {% for req in requests %}
+            <div class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{ req.title }}</h5>
+                    <small class="text-muted">{{ req.created_at.strftime('%d-%m-%Y') }}</small>
+                </div>
+                <p class="mb-1">{{ req.description }}</p>
+                <div class="d-flex justify-content-between align-items-center mt-2">
+                    <span class="badge {% if req.status == 'Новая' %}bg-secondary{% elif req.status == 'В работе' %}bg-primary{% elif req.status == 'Завершено' %}bg-success{% else %}bg-danger{% endif %}">{{ req.status }}</span>
+                    {% if req.status == 'Завершено' and not req.review %}
+                    <button class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#reviewModal{{ req.id }}">Оставить отзыв</button>
+                    <div class="modal fade" id="reviewModal{{ req.id }}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form method="POST" action="{{ url_for('add_review', req_id=req.id) }}">
+                                    <div class="modal-header"><h5 class="modal-title">Отзыв по заявке #{{ req.id }}</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                                    <div class="modal-body">
+                                        <div class="mb-3"><label>Оценка (1-5)</label><input type="number" name="rating" class="form-control" min="1" max="5" required></div>
+                                        <div class="mb-3"><label>Текст отзыва</label><textarea name="text" class="form-control" required></textarea></div>
+                                    </div>
+                                    <div class="modal-footer"><button type="submit" class="btn btn-primary">Отправить</button></div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% elif req.review %}
+                    <span class="text-success small">✅ Отзыв оставлен</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-muted">У вас пока нет заявок.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
