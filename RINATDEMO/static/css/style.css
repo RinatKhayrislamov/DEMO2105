@@ -1,0 +1,32 @@
+:root {
+    --pastel-bg: #fdfbf7;
+    --pastel-primary: #aec6cf;
+    --text-color: #4a4a4a;
+}
+
+body {
+    background-color: var(--pastel-bg);
+    color: var(--text-color);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.pastel-nav {
+    background-color: #eef2f3 !important;
+    border-bottom: 2px solid var(--pastel-primary);
+}
+
+.btn-primary {
+    background-color: var(--pastel-primary);
+    border-color: var(--pastel-primary);
+    color: #fff;
+}
+.btn-primary:hover { background-color: #9ab5bf; border-color: #9ab5bf; }
+
+.carousel-item img {
+    height: 400px;
+    object-fit: cover;
+    width: 100%;
+    border-radius: 10px;
+}
+
+.card { border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.05); background-color: #fff; }

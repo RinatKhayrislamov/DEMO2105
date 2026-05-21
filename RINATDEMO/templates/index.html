@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row mb-5">
+    <div class="col-12">
+        <div id="mainSlider" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+            <div class="carousel-inner">
+                {% for img in slider_images %}
+                <div class="carousel-item {% if loop.first %}active{% endif %}">
+                    <img src="{{ img }}" class="d-block w-100" alt="Slide {{ loop.index }}">
+                </div>
+                {% endfor %}
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#mainSlider" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#mainSlider" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="row text-center">
+    <div class="col-md-4 mb-4">
+        <div class="card p-4 h-100"><h3> Подача заявок</h3><p>Оформляйте обращения быстро и удобно.</p></div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card p-4 h-100"><h3> Быстрый ответ</h3><p>Обработка заявок в кратчайшие сроки.</p></div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card p-4 h-100"><h3> Отзывы</h3><p>Оцените качество нашей работы.</p></div>
+    </div>
+</div>
+
+<hr class="my-5" style="border-color: #aec6cf;">
+<h2 class="text-center mb-4"> Отзывы клиентов</h2>
+{% if reviews %}
+<div class="row">
+    {% for review in reviews %}
+    <div class="col-md-4 mb-3">
+        <div class="card p-3 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5 class="mb-0 text-muted">{{ review.author.username }}</h5>
+                <span class="badge bg-warning text-dark">⭐ {{ review.rating }}/5</span>
+            </div>
+            <p class="mb-2 fst-italic">"{{ review.text }}"</p>
+            <small class="text-muted">По заявке: {{ review.request.title }}</small>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="text-center py-4 text-muted"><p class="mb-0">Отзывов пока нет. Будьте первым!</p></div>
+{% endif %}
+{% endblock %}
