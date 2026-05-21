@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Панель администратора</h2><hr>
+<div class="row mb-4">
+    <div class="col-md-12">
+        <form method="GET" class="row g-3 align-items-end">
+            <div class="col-auto">
+                <label class="form-label">Фильтр:</label>
+                <select name="status" class="form-select">
+                    <option value="">Все</option>
+                    <option value="Новая" {% if current_status == 'Новая' %}selected{% endif %}>Новая</option>
+                    <option value="В работе" {% if current_status == 'В работе' %}selected{% endif %}>В работе</option>
+                    <option value="Завершено" {% if current_status == 'Завершено' %}selected{% endif %}>Завершено</option>
+                </select>
+            </div>
+            <div class="col-auto"><button type="submit" class="btn btn-primary">Применить</button></div>
+        </form>
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="table table-hover bg-white rounded shadow-sm">
+        <thead><tr><th>ID</th><th>Пользователь</th><th>Категория</th><th>Дата (ДД.ММ.ГГ)</th><th>Тема</th><th>Статус</th><th>Действия</th></tr></thead>
+        <tbody>
+            {% for req in requests %}
+            <tr>
+                <td>{{ req.id }}</td>
+                <td>{{ req.user.username }}</td>
+                <td><span class="badge bg-light text-dark border">{{ req.category }}</span></td>
+                <td>{{ req.date_str }}</td>
+                <td>{{ req.title }}</td>
+                <td><span class="badge {% if req.status == 'Завершено' %}bg-success{% elif req.status == 'Новая' %}bg-secondary{% else %}bg-primary{% endif %}">{{ req.status }}</span></td>
+                <td>
+                    <form method="POST" action="{{ url_for('update_status', req_id=req.id) }}" class="d-flex gap-2">
+                        <select name="status" class="form-select form-select-sm" style="width: 130px;">
+                            <option value="Новая" {% if req.status == 'Новая' %}selected{% endif %}>Новая</option>
+                            <option value="В работе" {% if req.status == 'В работе' %}selected{% endif %}>В работе</option>
+                            <option value="Завершено" {% if req.status == 'Завершено' %}selected{% endif %}>Завершено</option>
+                        </select>
+                        <button type="submit" class="btn btn-sm btn-outline-primary">OK</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

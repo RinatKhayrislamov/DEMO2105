@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-4">Действия</h2>
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card p-4">
+            <h4 class="mb-3">Новая заявка</h4>
+            <form method="POST" action="{{ url_for('new_request') }}">
+                {{ req_form.hidden_tag() }}
+                
+                <div class="mb-3">
+                    {{ req_form.title.label(class="form-label") }}
+                    {{ req_form.title(class="form-control", placeholder="Тема") }}
+                </div>
+
+                <div class="mb-3">
+                    {{ req_form.category.label(class="form-label") }}
+                    {{ req_form.category(class="form-select") }}
+                </div>
+
+                <div class="mb-3">
+                    {{ req_form.date_str.label(class="form-label") }}
+                    {{ req_form.date_str(class="form-control", placeholder="Например: 21.05.26") }}
+                    <small class="text-muted">Формат строго: ДД.ММ.ГГ</small>
+                </div>
+
+                <div class="mb-3">
+                    {{ req_form.description.label(class="form-label") }}
+                    {{ req_form.description(class="form-control", rows=5) }}
+                </div>
+
+                {{ req_form.submit(class="btn btn-primary w-100") }}
+            </form>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+        <div class="card p-4">
+            <h4 class="mb-3">Оставить отзыв</h4>
+            {% if pending_reviews %}
+                <form method="POST" action="{{ url_for('add_review_dynamic') }}">
+                    <div class="mb-3">
+                        <label class="form-label">Выберите заявку:</label>
+                        <select name="request_id" class="form-select" required>
+                            <option value="" disabled selected>-- Выберите --</option>
+                            {% for req in pending_reviews %}
+                                <option value="{{ req.id }}">{{ req.title }} ({{ req.date_str }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3"><label class="form-label">Оценка (1-5):</label><input type="number" name="rating" class="form-control" min="1" max="5" required></div>
+                    <div class="mb-3"><label class="form-label">Текст:</label><textarea name="text" class="form-control" rows=4 required></textarea></div>
+                    <button type="submit" class="btn btn-success w-100">Отправить</button>
+                </form>
+            {% else %}
+                <div class="alert alert-info">Нет завершенных заявок для отзыва.</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

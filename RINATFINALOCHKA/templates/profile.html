@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-4">👤 Мой профиль</h2>
+
+<!-- Карточка личных данных -->
+<div class="card p-4 mb-4 bg-white shadow-sm">
+    <h4 class="text-secondary mb-3">Личные данные</h4>
+    <div class="row">
+        <div class="col-md-6 mb-2"><strong>ФИО:</strong> {{ current_user.full_name }}</div>
+        <div class="col-md-6 mb-2"><strong>E-mail:</strong> {{ current_user.email }}</div>
+        <div class="col-md-6 mb-2"><strong>Телефон:</strong> {{ current_user.phone }}</div>
+        <div class="col-md-6 mb-2"><strong>Дата рождения:</strong> {{ current_user.birth_date }}</div>
+        <div class="col-md-6"><strong>Логин:</strong> {{ current_user.username }}</div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card p-3 h-100">
+            <h4 class="card-title text-primary">📜 История заявок</h4><hr>
+            {% if requests %}
+                <div class="list-group list-group-flush">
+                {% for req in requests %}
+                    <div class="list-group-item px-0">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="mb-1">{{ req.title }}</h6>
+                            <span class="badge bg-info text-dark">{{ req.category }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mt-1">
+                            <small class="text-muted">Дата события: <b>{{ req.date_str }}</b></small>
+                            <small class="text-muted">{{ req.created_at.strftime('%d.%m.%y') }}</small>
+                        </div>
+                        <p class="mb-1 small text-truncate mt-2">{{ req.description }}</p>
+                        <span class="badge {% if req.status == 'Завершено' %}bg-success{% elif req.status == 'Новая' %}bg-secondary{% else %}bg-primary{% endif %}">{{ req.status }}</span>
+                    </div>
+                {% endfor %}
+                </div>
+            {% else %}<p class="text-muted">Заявок нет.</p>{% endif %}
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card p-3 h-100">
+            <h4 class="card-title text-warning">⭐ Мои отзывы</h4><hr>
+            {% if reviews %}
+                <div class="list-group list-group-flush">
+                {% for rev in reviews %}
+                    <div class="list-group-item px-0">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">Заявка: {{ rev.request.title }}</h6>
+                            <small class="text-muted">{{ rev.request.date_str }}</small>
+                        </div>
+                        <p class="mb-1 small fst-italic">"{{ rev.text }}"</p>
+                        <span class="badge bg-warning text-dark">Оценка: {{ rev.rating }}/5</span>
+                    </div>
+                {% endfor %}
+                </div>
+            {% else %}<p class="text-muted">Отзывов нет.</p>{% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
